@@ -20,4 +20,24 @@ const seedUser = async (req, res) => {
     }
 };
 
-export default seedUser;
+const seedCandidate = async (req, res) => {
+    const seedCandidateQuery = `INSERT INTO candidate VALUES
+    (1, 'Ir. H. Joko Widodo', 'Prof. Dr. KH. Maruf Amin'),
+    (2, 'H. Prabowo Subianto', 'H. Sandiaga Salahuddin Uno')`;
+
+    try { 
+        const { rows } = await pool.query(seedCandidateQuery);
+        const dbResponse = rows;
+        if (!dbResponse) {
+            return res.status(status.bad).send(`Seeding was not successful`);
+        }
+        return res.status(status.created).send('Seeding candidate was successfuly');
+    } catch (error) {
+        return res.status(status.error).send(`An error occured, try later. Message ${error}`);
+    }
+};
+
+export {
+    seedUser,
+    seedCandidate,  
+};
