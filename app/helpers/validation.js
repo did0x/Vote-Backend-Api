@@ -5,7 +5,7 @@ const saltRounds = 5;
 const salt = bcrypt.genSaltSync(saltRounds);
 const hashPassword = password => bcrypt.hashSync(password, salt);
 
-const nonce = data => bcrypt.hashSync(data, salt);
+const hashNonce = data => bcrypt.hashSync(data, salt);
 const hashBlock = data => bcrypt.hashSync(data, salt);
 
 const comparePassword = (hashedPassword, password) => {
@@ -22,11 +22,15 @@ const isValidBlock = (block, previous_block) => {
     if (previous_block.index+1 !== block.index) {
         return false;
     }
-    if (bcrypt.compareSync(block.candidate_id, block.nonce)) {
+    const dataNonce = block.candidate_id.toString() + block.timestamp.toString();
+    const realNonce = hashNonce(dataNonce);
+    if (realNonce !== block.nonce) {
         return false;
     }
-    if (bcrypt.compareSync()) {
-
+    const dataHash = block.user_nik + block.candidate_id + block.nonce + block.timestamp;
+    const realHash = hashBlock(dataHash);
+    if (realHash !== block.hash) {
+        return false;
     }
     if (previous_block.hash !== block.previous_hash) {
         return false;
@@ -52,7 +56,7 @@ const generateUserToken = (nik) => {
 
 export {
     hashPassword,
-    nonce,
+    hashNonce,
     hashBlock,
     comparePassword,
     isValidPassword,

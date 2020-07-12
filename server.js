@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import usersRoute from './app/routers/usersRoute';
 import candidateRoute from './app/routers/candidateRoute';
+import blockRoute from './app/routers/blockRoute'
 import seedRoute from './app/routers/seedRoute';
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.use('/api', usersRoute);
 app.use('/api', candidateRoute);
+app.use('/api', blockRoute);
 app.use('/api', seedRoute);
 
 const port = process.env.PORT || 3002;
