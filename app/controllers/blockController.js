@@ -47,7 +47,7 @@ const createVote = async (req, res) => {
         const values = Object.values(block);
         if (isValidBlock(block, dbResponse)) {
             const { rows } = await dbQuery.query(createVoteQuery, values);
-            const dbResponse = rows;
+            const dbResponse = rows[0];
             delete dbResponse.nonce;
             delete dbResponse.hash;
             delete dbResponse.previous_hash;
@@ -66,8 +66,8 @@ const getAllVote = async (req, res) => {
     const getAllVoteQuery = 'SELECT * FROM blockchain WHERE index > 0';
     try {
         const { rows } = await dbQuery.query(getAllVoteQuery);
-        const dbResponse = rows;
-        if (dbResponse[0] === undefined) {
+        const dbResponse = rows[0];
+        if (!dbResponse) {
             errorMessage.error = 'Vote never submitted';
             return res.status(status.bad).send(errorMessage);
         }

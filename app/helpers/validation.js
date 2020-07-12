@@ -9,7 +9,7 @@ const hashNonce = data => bcrypt.hashSync(data, salt);
 const hashBlock = data => bcrypt.hashSync(data, salt);
 
 const comparePassword = (hashedPassword, password) => {
-    return bcrypt.compare(password, hashedPassword);
+    return bcrypt.compareSync(password, hashedPassword);
 };
 
 const isValidPassword = (password) => {
