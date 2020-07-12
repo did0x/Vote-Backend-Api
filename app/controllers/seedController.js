@@ -4,6 +4,7 @@ import { status } from '../helpers/status';
 
 const seedUser = async (req, res) => {
     const seedUserQuery = `INSERT INTO users VALUES
+    (0, '${hashPassword('password')}', default, NOW()),
     (1301184402, '${hashPassword('password1')}', default, NOW()),
     (1301194119, '${hashPassword('password2')}', default, NOW()),
     (1301182420, '${hashPassword('password3')}', default, NOW())`;
@@ -37,7 +38,24 @@ const seedCandidate = async (req, res) => {
     }
 };
 
+const seedBlock = async (req, res) => {
+    const seedBlockQuery = `INSERT INTO blockchain VALUES
+    (0, 0, 1, 'GENESIS_NONCE', 'GENESIS_HASH', 'GENESIS_PREVIOUS', NOW())`;
+
+    try {
+        const { rows } = await pool.query(seedBlockQuery);
+        const dbResponse = rows;
+        if (!dbResponse) {
+            return res.status(status.bad).send(`Seeding was not successful`);
+        }
+        return res.status(status.created).send('Seeding block was successfully');
+    } catch (error) {
+        return res.status(status.error).send(`An error occured, try later. Message ${error}`);
+    }
+}
+
 export {
     seedUser,
     seedCandidate,  
+    seedBlock,
 };
